@@ -5,7 +5,9 @@ local DrivingSchools = {}
 RegisterNetEvent('qb-cityhall:server:requestId', function(identityData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    local cash = Player.PlayerData.money['cash']
     local info = {}
+
     if identityData.item == "id_card" then
         info.citizenid = Player.PlayerData.citizenid
         info.firstname = Player.PlayerData.charinfo.firstname
@@ -13,20 +15,40 @@ RegisterNetEvent('qb-cityhall:server:requestId', function(identityData)
         info.birthdate = Player.PlayerData.charinfo.birthdate
         info.gender = Player.PlayerData.charinfo.gender
         info.nationality = Player.PlayerData.charinfo.nationality
+        if cash >= 50 then 
+            Player.Functions.AddItem(identityData.item, 1, nil, info)
+            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[identityData.item], 'add')
+            Player.Functions.RemoveMoney("cash", 50)
+            TriggerClientEvent('QBCore:Notify', src, 'Purchase successful', 'success')
+        else 
+            TriggerClientEvent('QBCore:Notify', src, 'You do not have enough cash', 'error')
+        end
     elseif identityData.item == "driver_license" then
         info.firstname = Player.PlayerData.charinfo.firstname
         info.lastname = Player.PlayerData.charinfo.lastname
         info.birthdate = Player.PlayerData.charinfo.birthdate
         info.type = "Class C Driver License"
+        if cash >= 50 then 
+            Player.Functions.AddItem(identityData.item, 1, nil, info)
+            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[identityData.item], 'add')
+            Player.Functions.RemoveMoney("cash", 50)
+            TriggerClientEvent('QBCore:Notify', src, 'Purchase successful', 'success')
+        else 
+            TriggerClientEvent('QBCore:Notify', src, 'You do not have enough cash', 'error')
+        end
     elseif identityData.item == "weaponlicense" then
         info.firstname = Player.PlayerData.charinfo.firstname
         info.lastname = Player.PlayerData.charinfo.lastname
         info.birthdate = Player.PlayerData.charinfo.birthdate
+        if cash >= 2500 then 
+            Player.Functions.AddItem(identityData.item, 1, nil, info)
+            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[identityData.item], 'add')
+            Player.Functions.RemoveMoney("cash", 2500)
+            TriggerClientEvent('QBCore:Notify', src, 'Purchase successful', 'success')
+        else 
+            TriggerClientEvent('QBCore:Notify', src, 'You do not have enough cash', 'error')
+        end
     end
-
-    Player.Functions.AddItem(identityData.item, 1, nil, info)
-    TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[identityData.item], 'add')
-    Player.Functions.RemoveMoney("cash", 50)
 end)
 
 RegisterNetEvent('qb-cityhall:server:getIDs', function()
